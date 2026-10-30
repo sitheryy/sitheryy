@@ -1,0 +1,30 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face { font-family: 'Mali'; src: url(fonts/Mali-Bold.ttf); font-weight: 700; }
+@font-face { font-family: 'Mali'; src: url(fonts/Mali-SemiBold.ttf); font-weight: 600; }
+@font-face { font-family: 'Mali'; src: url(fonts/Mali-Regular.ttf); font-weight: 400; }
+html,body { margin:0; background:#222; }
+canvas { display:block; }
+</style></head>
+<body><canvas id="c" width="1080" height="1920"></canvas>
+<script src="lib.js"></script>
+<script src="icons.js"></script>
+<script src="figures.js"></script>
+<script src="map.js"></script>
+<script src="timeline.js"></script>
+<script src="scenes.js"></script>
+<script>
+const CV = document.getElementById('c'), CTX = CV.getContext('2d');
+const IMG = {};
+async function boot() {
+  await Promise.all(['700 40px Mali', '600 40px Mali', '400 40px Mali'].map(f => document.fonts.load(f, 'กขค abc')));
+  const names = ['i_mong','i_klongaew','i_chap','i_ching','i_phin','i_krap','i_khaen','i_salo','i_sueng','i_ponglang','i_klongyao','i_wot','north_cut', 'central_cut', 'isan_cut', 'south_cut', 'teacher_cut', 'logo_round'];
+  await Promise.all(names.map(n => new Promise(ok => { const im = new Image(); im.onload = () => { IMG[n] = im; ok(); }; im.src = 'img/' + n + '.png'; })));
+  if (typeof init === 'function') init();
+  window.READY = true;
+}
+window.renderAt = t => { drawFrame(CTX, t); };
+window.grab = (t, q) => { drawFrame(CTX, t); return CV.toDataURL('image/jpeg', q || 0.9); };
+boot();
+</script></body></html>
